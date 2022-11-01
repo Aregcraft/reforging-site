@@ -47,16 +47,16 @@
     <title>anvil.json</title>
 </svelte:head>
 <Color bind:value={name}/>
-<TextProperty name="Name" bind:value={name}>The name of the reforging anvil item.</TextProperty>
+<TextProperty name="Name" bind:value={name}>The name of the reforge anvil item.</TextProperty>
 <Color bind:value={lore}/>
-<TextareaProperty name="Lore" bind:value={lore}>The lore of the reforging anvil item.</TextareaProperty>
-<RecipeProperty name="Recipe" bind:value={recipe}>The crafting recipe for the reforging anvil item.</RecipeProperty>
+<TextareaProperty name="Lore" bind:value={lore}>The lore of the reforge anvil item.</TextareaProperty>
+<RecipeProperty name="Recipe" bind:value={recipe}>The crafting recipe for the reforge anvil item.</RecipeProperty>
 <PropertyGroup name="Sound Effect">
-    Specifies the volume and pitch of the sound played whenever a player performs reforging.
+    Specifies the volume and pitch of the sound played whenever a player applies a reforge.
 </PropertyGroup>
 <DoubleProperty name="Volume" small bind:value={soundEffect['volume']}/>
 <DoubleProperty name="Pitch" small max={2} bind:value={soundEffect['pitch']}/>
 <IntProperty name="Price" bind:value={price}>
     Specifies the amount of respective material (e.g., diamonds for diamond sword, iron ingots for iron axe) required
-    to perform reforging.
+    to apply a reforge.
 </IntProperty>

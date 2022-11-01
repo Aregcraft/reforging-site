@@ -46,9 +46,9 @@
     {#if i !== 0}
         <hr>
     {/if}
-    <TextProperty name="Name" bind:value={name[i]}>The name of the reforging.</TextProperty>
+    <TextProperty name="Name" bind:value={name[i]}>The name of the reforge.</TextProperty>
     <TextProperty name="Ability" bind:value={ability[i]}>
-        The name of the ability of the reforging as per <code>abilities.json.</code>
+        The name of the ability of the reforge as per <code>abilities.json.</code>
     </TextProperty>
     <PropertyGroup name="Attributes">
         These are all the attributes, each corresponding to their respective stat.
