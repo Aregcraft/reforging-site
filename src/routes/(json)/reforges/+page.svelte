@@ -3,7 +3,6 @@
     import PropertyGroup from '$lib/PropertyGroup.svelte';
     import TextProperty from '$lib/TextProperty.svelte';
     import DoubleProperty from '$lib/DoubleProperty.svelte';
-    import IntProperty from '$lib/IntProperty.svelte';
 
     let count = 1;
     let name = [];
@@ -61,10 +60,10 @@
     <DoubleProperty name="Armor" small bind:value={armor[i]}/>
     <DoubleProperty name="Armor Toughness" small bind:value={armorToughness[i]}/>
     <DoubleProperty name="Attack Knockback" small bind:value={attackKnockback[i]}/>
-    <IntProperty name="Weight" bind:value={weight[i]}>
+    <DoubleProperty name="Weight" bind:value={weight[i]}>
         Represents the chance of this particular reforge being applied to the weapon. This is not a percentage, but
         rather relative weight, which means that there are no restrictions on the upper bound of the number.
-    </IntProperty>
+    </DoubleProperty>
     <div class="mb-5"></div>
 {/each}
 <button class="btn btn-primary" on:click={() => {

@@ -13,31 +13,36 @@
         double: DoubleProperty,
         int: IntProperty,
         string: TextProperty,
-        particle: ParticleProperty
+        particle: ParticleProperty,
+        expression: TextProperty
     };
     let counts = {};
-    let properties = {};
-    data['abilities'].forEach(({name, content}) => {
-        counts[name] = 1;
-        properties[name] = {};
-        properties[name]['name'] = [];
-        Object.keys(content['properties']).forEach(it => properties[name][it] = []);
-        properties[name]['price'] = {};
-        Object.keys(data['price']['properties']).forEach(it => properties[name]['price'][it] = []);
+    let rawProperties = {};
+    Object.keys(data['abilities']).forEach(name => {
+        counts[name] = 1
+        rawProperties[name] = {};
+        rawProperties[name]['name'] = [];
+        const content = data['abilities'][name];
+        Object.keys(content['properties']).forEach(it => rawProperties[name][it] = []);
+        content['external'].forEach(propertyName => {
+            rawProperties[name][propertyName] = {};
+            Object.keys(data['external'][propertyName]['properties']).forEach(it =>
+                rawProperties[name][propertyName][it] = []);
+        });
     });
 
     page.generate = () => {
         const abilities = {};
-        Object.entries(properties).forEach(([ability, properties]) => {
+        Object.entries(rawProperties).forEach(([ability, properties]) => {
             abilities[ability] = {};
             for (let i = 0; i < counts[ability]; i++) {
                 let name = properties['name'][i];
                 abilities[ability][name] = {};
                 Object.entries(properties).filter(([name, _]) => name !== 'name').forEach(([key, value]) => {
-                    if (key === 'price') {
-                        abilities[ability][name]['price'] = {};
-                        Object.entries(value).forEach(([key, value]) =>
-                            abilities[ability][name]['price'][key] = value[i]);
+                    if (data['abilities'][ability]['external'].includes(key)) {
+                        abilities[ability][name][key] = {};
+                        Object.entries(value).forEach(([propertyKey, value]) =>
+                            abilities[ability][name][key][propertyKey] = value[i]);
                     } else {
                         abilities[ability][name][key] = value[i];
                     }
@@ -63,7 +68,7 @@
 <div class="navbar navbar-expand-md">
     <div class="container-fluid">
         <ul class="navbar-nav mx-auto">
-            {#each data['abilities'] as {name}}
+            {#each Object.keys(data['abilities']) as name}
                 <li class="nav-item">
                     <a role="button" class="nav-link" data-bs-toggle="collapse" href="#{getFirstWord(name)}"
                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,25 +80,28 @@
     </div>
 </div>
 <div id="ability">
-    {#each data['abilities'] as {name, content}, i}
+    {#each Object.entries(data['abilities']) as [name, {description, properties, external}], i}
         <div class="collapse" class:show={i === 0} id={getFirstWord(name)} data-bs-parent="#ability">
             {#each Array(counts[name]) as _, i}
                 {#if i !== 0}
                     <hr>
                 {/if}
-                <TextProperty name="Name" bind:value={properties[name]['name'][i]}>
-                    {content['description']}
-                </TextProperty>
-                <PropertyGroup name="Price">{data['price']['description']}</PropertyGroup>
-                {#each Object.entries(data['price']['properties']) as [property, {type, description}]}
-                    <svelte:component this={propertyComponents[type]} name={toTitleCase(property)} small
-                                      bind:value={properties[name]['price'][property][i]}>
-                        {description}
-                    </svelte:component>
+                <TextProperty name="Name" bind:value={rawProperties[name]['name'][i]}>{description}</TextProperty>
+                {#each external as externalProperty}
+                    <PropertyGroup name={toTitleCase(externalProperty)}>
+                        {data['external'][externalProperty]['description']}
+                    </PropertyGroup>
+                    {#each Object.entries(data['external'][externalProperty]['properties']) as
+                        [property, {type, description}]}
+                        <svelte:component this={propertyComponents[type]} name={toTitleCase(property)} small
+                                          bind:value={rawProperties[name][externalProperty][property][i]}>
+                            {description}
+                        </svelte:component>
+                    {/each}
                 {/each}
-                {#each Object.entries(content['properties']) as [property, {type, description}]}
+                {#each Object.entries(properties) as [property, {type, description}]}
                     <svelte:component this={propertyComponents[type]} name={toTitleCase(property)}
-                                      bind:value={properties[name][property][i]}>
+                                      bind:value={rawProperties[name][property][i]}>
                         {description}
                     </svelte:component>
                 {/each}
