@@ -1,6 +1,6 @@
 <script>
     export let value;
-    let color;
+    let color = '';
 </script>
 
 <div class="col">
