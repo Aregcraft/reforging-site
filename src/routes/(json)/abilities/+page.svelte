@@ -6,6 +6,7 @@
     import IntProperty from '$lib/IntProperty.svelte';
     import TextProperty from '$lib/TextProperty.svelte';
     import ParticleProperty from '$lib/ParticleProperty.svelte';
+    import PotionEffectTypeProperty from '$lib/PotionEffectTypeProperty.svelte';
 
     export let data;
     const propertyComponents = {
@@ -14,6 +15,7 @@
         int: IntProperty,
         string: TextProperty,
         particle: ParticleProperty,
+        potioneffecttype: PotionEffectTypeProperty,
         expression: TextProperty
     };
     let counts = {};
@@ -57,8 +59,12 @@
             .map(it => it === it.toUpperCase() ? ` ${it}` : it).join('');
     }
 
-    function getFirstWord(name) {
-        return name.split(/(?=[A-Z])/)[0];
+    function getAbilityIdentifier(name) {
+        return name.split(/(?=[A-Z])/).slice(0, -1).map(it => it.toLowerCase()).join('-');
+    }
+
+    function getAbilityName(name) {
+        return getAbilityIdentifier(name).replaceAll('-', ' ');
     }
 </script>
 
@@ -70,9 +76,9 @@
         <ul class="navbar-nav mx-auto">
             {#each Object.keys(data['abilities']) as name}
                 <li class="nav-item">
-                    <a role="button" class="nav-link" data-bs-toggle="collapse" href="#{getFirstWord(name)}"
+                    <a role="button" class="nav-link" data-bs-toggle="collapse" href="#{getAbilityIdentifier(name)}"
                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        {getFirstWord(name)}
+                        {getAbilityName(name)}
                     </a>
                 </li>
             {/each}
@@ -81,7 +87,7 @@
 </div>
 <div id="ability">
     {#each Object.entries(data['abilities']) as [name, {description, properties, external}], i}
-        <div class="collapse" class:show={i === 0} id={getFirstWord(name)} data-bs-parent="#ability">
+        <div class="collapse" class:show={i === 0} id={getAbilityIdentifier(name)} data-bs-parent="#ability">
             {#each Array(counts[name]) as _, i}
                 {#if i !== 0}
                     <hr>
