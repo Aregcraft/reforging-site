@@ -30,6 +30,7 @@
     'movement_speed',
     'armor',
     'armor_toughness',
-    'attack_knockback'
+    'attack_knockback',
+    'ability'
     ]} bind:value={lore}/>
 <TextareaProperty name="Lore" bind:value={lore}>The lore attached to the end of each reforged item.</TextareaProperty>
