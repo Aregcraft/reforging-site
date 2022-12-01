@@ -53,6 +53,9 @@
 <!--<div class="container">-->
 <!--    <slot/>-->
 <!--</div>-->
-<div class="container">
-    <h1 class="mt-5 text-danger">Website is currently under maintenance. Please come back later!</h1>
+<div class="container d-flex flex-column justify-content-center align-items-center h-100">
+    <h1 class="display-1 text-success text-center">Website is being updated</h1>
+    <h3 class="mt-3 text-success fw-light">
+        to correspond with the latest updates of the reforging plugin!
+    </h3>
 </div>
