@@ -1,62 +1,56 @@
 <script>
-    import {page} from '$app/stores';
+    import {generate} from '$lib/stores';
     import Color from '$lib/Color.svelte';
-    import PropertyGroup from '$lib/PropertyGroup.svelte';
-    import TextProperty from '$lib/TextProperty.svelte';
-    import TextareaProperty from '$lib/TextareaProperty.svelte';
+    import StringProperty from '$lib/StringProperty.svelte';
+    import Property from '$lib/Property.svelte';
+    import StringListProperty from '$lib/StringListProperty.svelte';
+    import RecipeProperty from '$lib/RecipeProperty.svelte';
     import DoubleProperty from '$lib/DoubleProperty.svelte';
     import IntProperty from '$lib/IntProperty.svelte';
-    import RecipeProperty from '$lib/RecipeProperty.svelte';
 
-    const letters = 'abcdefghi'.split('');
-    let name = '';
-    let lore = '';
+    let item = {
+        name: '',
+        lore: ''
+    };
     let recipe = [];
-    let soundEffect = {};
-    let price;
+    let sound = {};
+    let price = 1;
 
-    page.generate = () => {
-        const shape = [];
-        const keys = {};
-        const values = {}
-        for (let i = 0; i < recipe.length; i++) {
-            if (!(recipe[i] in values)) {
-                keys[letters[i]] = recipe[i];
-                values[recipe[i]] = letters[i];
-            }
-            shape[i] = values[recipe[i]];
-        }
+    $generate = () => {
         return {
-            name,
-            lore: lore.split('\n'),
-            recipe: {
-                shape: [
-                    shape.slice(0, 3).join(''),
-                    shape.slice(3, 6).join(''),
-                    shape.slice(6, 9).join('')
-                ],
-                keys
+            item: {
+                name,
+                lore: item.lore.split('\n')
             },
-            soundEffect,
+            recipe,
+            sound,
             price
         };
     };
 </script>
 
 <svelte:head>
-    <title>anvil.json</title>
+    <title>Reforging | anvil.json</title>
 </svelte:head>
-<Color bind:value={name}/>
-<TextProperty name="Name" bind:value={name}>The name of the reforge anvil item.</TextProperty>
-<Color bind:value={lore}/>
-<TextareaProperty name="Lore" bind:value={lore}>The lore of the reforge anvil item.</TextareaProperty>
-<RecipeProperty name="Recipe" bind:value={recipe}>The crafting recipe for the reforge anvil item.</RecipeProperty>
-<PropertyGroup name="Sound Effect">
-    Specifies the volume and pitch of the sound played whenever a player applies a reforge.
-</PropertyGroup>
-<DoubleProperty name="Volume" small bind:value={soundEffect['volume']}/>
-<DoubleProperty name="Pitch" small max={2} bind:value={soundEffect['pitch']}/>
-<IntProperty name="Price" bind:value={price}>
-    Specifies the amount of respective material (e.g., diamonds for diamond sword, iron ingots for iron axe) required
-    to apply a reforge.
+<Property name="Item" size="2">Configures the look of the reforging anvil.</Property>
+<Color size="3" bind:value={item.name}/>
+<StringProperty name="Name" size="3" bind:value={item.name}>
+    Specifies the name of the reforging anvil.
+</StringProperty>
+<Color size="3" bind:value={item.lore}/>
+<StringListProperty name="Lore" size="3" bind:value={item.lore}>
+    Specifies the name of the reforging anvil.
+</StringListProperty>
+<RecipeProperty name="Recipe" size="2" bind:value={recipe}>
+    Specifies the crafting recipe of the reforging anvil.
+</RecipeProperty>
+<Property name="Sound" size="2">Specifies the sound played when a player is using a reforging anvil.</Property>
+<DoubleProperty name="Volume" size="3" bind:value={sound.volume}>
+    Specifies the volume of the sound.
+</DoubleProperty>
+<DoubleProperty name="Pitch" size="3" bind:value={sound.pitch}>
+    Specifies the pitch of the sound.
+</DoubleProperty>
+<IntProperty name="Price" size="2" bind:value={price}>
+    Specifies the amount of the respective ingredient required to use a reforging anvil.
 </IntProperty>

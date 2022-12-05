@@ -1,20 +1,15 @@
-export async function load({fetch}) {
-    let res = await fetch('https://raw.githubusercontent.com/Aregcraft/reforging/master/manifest.json');
-    let data = await res.json();
+let models = 'https://raw.githubusercontent.com/Aregcraft/reforging/master/models/';
+
+export async function load({parent, fetch}) {
+    let {manifest} = await parent();
     return {
-        abilities: Object.fromEntries(await Promise.all(data['abilities'].map(async it => {
-            let res = await fetch(`https://raw.githubusercontent.com/Aregcraft/reforging/master/abilities/${it}`);
-            return [
-                `${it.split('.')[0].slice(0, -1)}ies`,
-                await res.json()
-            ];
+        abilities: Object.fromEntries(await Promise.all(manifest.abilities.map(async it => {
+            let res = await fetch(`${models}abilities/${it}.json`);
+            return [it, await res.json()];
         }))),
-        external: Object.fromEntries(await Promise.all(data['external'].map(async it => {
-            let res = await fetch(`https://raw.githubusercontent.com/Aregcraft/reforging/master/abilities/${it}`);
-            return [
-                it.split('.')[0],
-                await res.json()
-            ];
+        external: Object.fromEntries(await Promise.all(manifest.external.map(async it => {
+            let res = await fetch(`${models}external/${it}.json`);
+            return [it, await res.json()];
         })))
     };
 }
