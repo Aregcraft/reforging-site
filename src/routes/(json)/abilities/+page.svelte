@@ -23,13 +23,9 @@
     }
     let abilities = [];
     let ability;
-    
-    function split(text) {
-        return text.split(/(?=[A-Z])/).slice(0, -1).join(' ');
-    }
-    
+
     function capitalize(text) {
-        return text[0].toUpperCase() + text.substring(1);
+        return (text[0].toUpperCase() + text.substring(1)).split(/(?=[A-Z])/).join(' ');
     }
 
     $generate = () => abilities;
@@ -43,7 +39,7 @@
     {#if i > 0}
         <hr>
     {/if}
-    <Property name={split(ability.type)} size="1">{model.description}</Property>
+    <Property name={capitalize(ability.type)} size="1">{model.description}</Property>
     {#each Object.entries(model.external) as [external, type]}
         {@const model = data.external[type]}
         <Property name={capitalize(external)} size="2">{model.description}</Property>
@@ -65,7 +61,7 @@
     <div class="col">
         <select class="form-select" bind:value={ability}>
             {#each Object.entries(data.abilities) as [name]}
-                <option value={name}>{split(name)}</option>
+                <option value={name}>{capitalize(name)}</option>
             {/each}
         </select>
     </div>
