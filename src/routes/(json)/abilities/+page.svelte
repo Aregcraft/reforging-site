@@ -2,6 +2,7 @@
     import Property from '$lib/Property.svelte';
     import BooleanProperty from '$lib/BooleanProperty.svelte';
     import DoubleProperty from '$lib/DoubleProperty.svelte';
+    import EntityTypeProperty from '$lib/EntityTypeProperty.svelte';
     import IntProperty from '$lib/IntProperty.svelte';
     import MaterialProperty from '$lib/MaterialProperty.svelte';
     import ParticleProperty from '$lib/ParticleProperty.svelte';
@@ -14,6 +15,7 @@
     let components = {
         boolean: BooleanProperty,
         double: DoubleProperty,
+        EntityType: EntityTypeProperty,
         int: IntProperty,
         Material: MaterialProperty,
         Particle: ParticleProperty,
@@ -28,6 +30,10 @@
         return (text[0].toUpperCase() + text.substring(1)).split(/(?=[A-Z])/).join(' ');
     }
 
+    function withoutSuffix(text) {
+        return capitalize(text).split(' ').slice(0, -1).join('');
+    }
+
     $generate = () => abilities;
 </script>
 
@@ -35,7 +41,7 @@
     <title>Reforging | abilities.json</title>
 </svelte:head>
 {#each abilities as ability, i}
-    {@const model = data.abilities[ability.type]}
+    {@const model = data.abilities[`${ability.type}Ability`]}
     {#if i > 0}
         <hr>
     {/if}
@@ -61,7 +67,7 @@
     <div class="col">
         <select class="form-select" bind:value={ability}>
             {#each Object.entries(data.abilities) as [name]}
-                <option value={name}>{capitalize(name)}</option>
+                <option value={name}>{capitalize(withoutSuffix(name))}</option>
             {/each}
         </select>
     </div>
@@ -71,9 +77,8 @@
                 ...Object.keys(data.abilities[ability].external).reduce((accumulator, value) => {
                     return {...accumulator, [value]: {}};
                     }, {}),
-                type: ability
+                type: withoutSuffix(ability)
             }];
-            console.log(abilities[abilities.length - 1]);
         }}><i class="bi bi-plus"></i> Add Ability</button>
     </div>
 </div>
